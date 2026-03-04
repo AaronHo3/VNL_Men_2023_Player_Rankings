@@ -36,6 +36,10 @@ vnl_men_2023/
    - `make notebook`
 5. Run custom ranking model:
    - `make rank`
+6. Run country performance analysis:
+   - `make country`
+7. Launch interactive dashboard:
+   - `make dashboard`
 
 The download uses this Kaggle dataset id: `yeganehbavafa/vnl-men-2023`.
 
@@ -159,3 +163,92 @@ Interpretation notes:
 - Use `top_players_by_position.csv` for a clean, role-by-role leaderboard.
 - `ranking_vs_attack_leaders.csv` helps compare model with attack-only leaderboards (a proxy for official scoring leaders).
 - If official VNL leaders CSV is added, it can compare external leaderboards directly by player name.
+
+## Project idea: Country Performance Analysis
+
+This repository includes a country-level style comparison to answer:
+
+- Which country has the strongest attackers?
+- Which countries rely more on defense?
+- Which positions dominate certain teams?
+
+Run:
+
+- `make country`
+
+Optional:
+
+- `.venv/bin/python scripts/run_country_performance.py --min-players 6 --top-countries 8`
+
+Outputs:
+
+- `data/processed/country_performance_summary.csv` (country averages + attack/defense indices + z-scores)
+- `data/processed/country_player_counts.csv` (players tracked per country)
+- `data/processed/country_position_mix.csv` (position share by country + dominant role)
+- `data/processed/country_performance_insights.md` (plain-language answers to attack/defense/position questions)
+- `reports/figures/country_style_radar.png` (style radar across selected countries)
+- `reports/figures/country_style_radar_all_part1.png` (all-country radar, part 1)
+- `reports/figures/country_style_radar_all_part2.png` (all-country radar, part 2; auto-split for readability)
+- `reports/figures/country_stat_boxplots.png` (attack/dig/receive distribution by country, with country mean markers)
+- `reports/figures/country_style_heatmap.png` (country x stat z-score heatmap)
+
+Interpretation notes:
+
+- Radar values are normalized to `[0, 1]` by stat using min-max scaling across eligible countries.
+- A radar value of `1.00` means that country has the highest country-average value for that stat in the compared set.
+- Boxplots show player-level distributions, not country totals:
+  - y-axis is each player's dataset-provided per-match stat value (`Attack`, `Dig`, `Receive`).
+  - boxes summarize spread (quartiles/median) across players from a country.
+  - black diamond markers indicate country means for each plotted stat.
+- A country looking strong in radar but less extreme in boxplots is possible:
+  - radar uses country means after normalization,
+  - boxplots expose distribution, variance, and outliers.
+- Higher boxplot values mean players from that country tend to contribute more per player for that stat.
+- This does not by itself prove higher team-level totals, which also depend on lineup usage, opportunities, and number of tracked players.
+
+## Interactive Sports Analytics Dashboard
+
+The project includes an interactive dashboard built with **Python + Plotly + Streamlit** and Tableau-ready exports.
+
+Run:
+
+- `make dashboard`
+
+Dashboard features:
+
+- Player search:
+  - search by name and filter by country/position
+  - select players from labeled dropdown entries (`Player (Country | Position)`)
+  - browse players quickly with `Previous Player` and `Next Player` buttons
+  - inspect player profile radar vs position average
+- Country comparison:
+  - compare selected countries across all core stats
+  - attack vs defense index comparison
+- Position analytics:
+  - stat distribution by position
+  - position mean heatmap
+  - country-to-position composition treemap
+- Top players leaderboard:
+  - live ranking with adjustable weights
+  - top-N leaderboard table + chart
+- Tableau tab:
+  - download curated CSV extracts (`players`, `country_summary`, `ranking`) for Tableau
+
+Dashboard interpretation notes:
+
+- Every chart in the app includes an on-screen interpretation caption directly below the visual.
+- Player profile radar:
+  - selected player is shown in **green** and position average in **red** for contrast.
+  - axis categories are fixed to `Attack`, `Block`, `Serve`, `Set`, `Dig`, `Receive`.
+  - radial tick values are shown to read magnitude differences.
+- Leaderboard rankings use `fair_combined_score` from the ranking pipeline
+  (`0.40*custom_score + 0.60*(position_percentile*10)`).
+
+First launch note:
+
+- Streamlit may prompt for optional onboarding email in terminal.
+- Press `Enter` to skip, then open the printed local URL (typically `http://localhost:8501`).
+
+Dashboard app file:
+
+- `scripts/dashboard_app.py`

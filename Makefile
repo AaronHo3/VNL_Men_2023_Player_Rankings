@@ -3,7 +3,7 @@ VENV ?= .venv
 VENV_PYTHON := $(VENV)/bin/python
 VENV_PIP := $(VENV)/bin/pip
 
-.PHONY: setup install download-data cluster cluster-tsne rank notebook test clean
+.PHONY: setup install download-data cluster cluster-tsne rank country dashboard notebook test clean
 
 setup:
 	$(PYTHON) -m venv $(VENV)
@@ -24,6 +24,12 @@ cluster-tsne:
 
 rank:
 	$(VENV_PYTHON) scripts/run_player_ranking.py
+
+country:
+	$(VENV_PYTHON) scripts/run_country_performance.py
+
+dashboard:
+	$(VENV)/bin/streamlit run scripts/dashboard_app.py
 
 notebook:
 	$(VENV_PYTHON) -m notebook
