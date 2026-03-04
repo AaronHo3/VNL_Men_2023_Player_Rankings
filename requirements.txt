@@ -1,0 +1,10 @@
+pandas>=2.2
+numpy>=1.26
+matplotlib>=3.8
+seaborn>=0.13
+scikit-learn>=1.5
+jupyter>=1.0
+notebook>=7.2
+ipykernel>=6.29
+pytest>=8.3
+kagglehub>=0.3.3
