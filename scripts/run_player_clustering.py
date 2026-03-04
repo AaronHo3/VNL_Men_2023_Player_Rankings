@@ -9,7 +9,7 @@ import os
 from pathlib import Path
 import sys
 
-# Keep numerical libs compatible with restricted environments.
+# Keep numerical libs compatible with restricted environments
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 os.environ.setdefault("OMP_NUM_THREADS", "1")
 os.environ.setdefault("OPENBLAS_NUM_THREADS", "1")
@@ -22,12 +22,25 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 
-# Allow running script directly from project root without package install.
+# Allow running script directly from project root without package install
 SRC_DIR = PROJECT_ROOT / "src"
 if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
 
 from vnl_men_2023.player_clustering import load_player_data, run_clustering
+
+INTERACTIVE_PALETTE = [
+    "#1f77b4",
+    "#ff7f0e",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#8c564b",
+    "#e377c2",
+    "#7f7f7f",
+    "#bcbd22",
+    "#17becf",
+]
 
 
 def parse_args() -> argparse.Namespace:
@@ -94,19 +107,7 @@ def save_interactive_pca(df: pd.DataFrame, out_path: Path) -> bool:
 
     data_json = json.dumps(interactive_df.to_dict(orient="records"))
     labels = sorted(interactive_df["cluster_label"].unique().tolist())
-    palette = [
-        "#1f77b4",
-        "#ff7f0e",
-        "#2ca02c",
-        "#d62728",
-        "#9467bd",
-        "#8c564b",
-        "#e377c2",
-        "#7f7f7f",
-        "#bcbd22",
-        "#17becf",
-    ]
-    color_map = {label: palette[i % len(palette)] for i, label in enumerate(labels)}
+    color_map = {label: INTERACTIVE_PALETTE[i % len(INTERACTIVE_PALETTE)] for i, label in enumerate(labels)}
     color_json = json.dumps(color_map)
 
     html = f"""<!doctype html>
