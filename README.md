@@ -1,6 +1,6 @@
 # VNL Men 2023 Analysis
 
-Starter project for exploring the Volleyball Nations League (Men, 2023) Kaggle dataset.
+Project for exploring the Volleyball Nations League (Men, 2023) Kaggle dataset.
 
 ## Project structure
 
