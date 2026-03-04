@@ -34,6 +34,8 @@ vnl_men_2023/
    - `make cluster`
 4. Start Jupyter (optional):
    - `make notebook`
+5. Run custom ranking model:
+   - `make rank`
 
 The download uses this Kaggle dataset id: `yeganehbavafa/vnl-men-2023`.
 
@@ -105,3 +107,57 @@ Outputs:
   - cluster profile interpretation
   - explicit label rationale table
   - PCA visualization with context
+
+## Project idea: Player Ranking Model
+
+This repository includes a custom ranking pipeline based on a weighted formula.
+
+Default formula:
+
+- `score = 0.40*Attack + 0.20*Block + 0.10*Serve + 0.15*Dig + 0.15*Receive`
+
+Run:
+
+- `make rank`
+
+Recommended interpretation order:
+
+- `data/processed/player_ranking_by_position.csv` (primary, fair role-vs-role ranking)
+- `data/processed/top_players_by_position.csv` (quick top list per role)
+- `data/processed/top_player_ranking.csv` (secondary global mixed leaderboard)
+
+Optional custom weights:
+
+- `.venv/bin/python scripts/run_player_ranking.py --w-attack 0.45 --w-block 0.20 --w-serve 0.10 --w-dig 0.10 --w-receive 0.15`
+- `.venv/bin/python scripts/run_player_ranking.py --top-n 20 --top-n-per-position 5`
+
+Outputs:
+
+- `data/processed/player_ranking.csv` (full ranking)
+- `data/processed/player_ranking_by_position.csv` (full table sorted by role rank)
+- `data/processed/top_player_ranking.csv` (top N players by fair combined score)
+- `data/processed/top_players_by_position.csv` (top players within each role)
+- `data/processed/ranking_vs_attack_leaders.csv` (custom rank vs attack-only rank)
+- `data/processed/ranking_top_position_mix.csv` (position mix in top N)
+- `data/processed/ranking_weights.json` (weights used)
+- `data/processed/ranking_summary.md` (plain-language summary)
+- `reports/figures/top_player_ranking.png` (top players chart)
+- `reports/figures/top_players_by_position_combined.png` (all positions in one faceted chart)
+- `reports/figures/all_players_OH.png` (all outside hitters, rank + score + country)
+- `reports/figures/all_players_OP.png` (all opposites, rank + score + country)
+- `reports/figures/all_players_MB.png` (all middle blockers, rank + score + country)
+- `reports/figures/all_players_S.png` (all setters, rank + score + country)
+- `reports/figures/all_players_L.png` (all liberos, rank + score + country)
+
+Interpretation notes:
+
+- Why OH/OP dominated before:
+  - Attack had the largest weight and many non-attacking roles (S/L) naturally score low in attack.
+- Better ranking now:
+  - `custom_score` keeps your weighted formula.
+- `role_adjusted_score` z-scores players within the same position and applies role-specific weights.
+- `fair_combined_score = 0.40*custom_score + 0.60*(position_percentile*10)` is used for final ranking.
+- This keeps attack value while giving fair visibility to MB/S/L roles.
+- Use `top_players_by_position.csv` when you want a clean, role-by-role leaderboard.
+- `ranking_vs_attack_leaders.csv` helps compare your model with attack-only leaderboards (a proxy for official scoring leaders).
+- If you later add official VNL leaders CSV, you can compare external leaderboards directly by player name.

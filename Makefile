@@ -3,7 +3,7 @@ VENV ?= .venv
 VENV_PYTHON := $(VENV)/bin/python
 VENV_PIP := $(VENV)/bin/pip
 
-.PHONY: setup install download-data cluster cluster-tsne notebook test clean
+.PHONY: setup install download-data cluster cluster-tsne rank notebook test clean
 
 setup:
 	$(PYTHON) -m venv $(VENV)
@@ -21,6 +21,9 @@ cluster:
 
 cluster-tsne:
 	$(VENV_PYTHON) scripts/run_player_clustering.py --with-tsne
+
+rank:
+	$(VENV_PYTHON) scripts/run_player_ranking.py
 
 notebook:
 	$(VENV_PYTHON) -m notebook
