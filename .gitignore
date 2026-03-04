@@ -21,7 +21,6 @@ env/
 # Data artifacts
 data/interim/*
 data/processed/*
-reports/figures/*
 
 # Keep folders in git
 !data/interim/.gitkeep
