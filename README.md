@@ -7,7 +7,7 @@ Project for exploring the Volleyball Nations League (Men, 2023) Kaggle dataset.
 ```
 vnl_men_2023/
 ├── data/
-│   ├── raw/         # Original dataset files from Kaggle (do not edit)
+│   ├── raw/         # Original dataset files from Kaggle
 │   ├── interim/     # Temporary cleaned/merged data
 │   └── processed/   # Final modeling/analysis tables
 ├── notebooks/       # Jupyter notebooks for exploratory analysis
@@ -39,7 +39,7 @@ vnl_men_2023/
 
 The download uses this Kaggle dataset id: `yeganehbavafa/vnl-men-2023`.
 
-If you prefer, run the script directly:
+If preferred, run the script directly:
 - `bash scripts/download_kaggle_data.sh`
 
 ## Project idea: Player Performance Clustering
@@ -55,8 +55,7 @@ This repository now includes an end-to-end clustering pipeline to discover playe
 Run:
 
 - `make cluster`
-- `make cluster-tsne` (optional t-SNE view)
-- `make notebook` (open notebooks)
+- `make notebook`
 
 Outputs:
 
@@ -69,7 +68,6 @@ Outputs:
 - `data/processed/cluster_interpretation.md`
 - `reports/figures/clusters_pca.png`
 - `reports/figures/clusters_pca_interactive.html` (hover for player details)
-- `reports/figures/clusters_tsne.png` (only when running `cluster-tsne`)
 
 ## How clusters are determined
 
@@ -154,10 +152,10 @@ Interpretation notes:
 - Why OH/OP dominated before:
   - Attack had the largest weight and many non-attacking roles (S/L) naturally score low in attack.
 - Better ranking now:
-  - `custom_score` keeps your weighted formula.
+  - `custom_score` keeps weighted formula.
 - `role_adjusted_score` z-scores players within the same position and applies role-specific weights.
 - `fair_combined_score = 0.40*custom_score + 0.60*(position_percentile*10)` is used for final ranking.
 - This keeps attack value while giving fair visibility to MB/S/L roles.
-- Use `top_players_by_position.csv` when you want a clean, role-by-role leaderboard.
-- `ranking_vs_attack_leaders.csv` helps compare your model with attack-only leaderboards (a proxy for official scoring leaders).
-- If you later add official VNL leaders CSV, you can compare external leaderboards directly by player name.
+- Use `top_players_by_position.csv` for a clean, role-by-role leaderboard.
+- `ranking_vs_attack_leaders.csv` helps compare model with attack-only leaderboards (a proxy for official scoring leaders).
+- If official VNL leaders CSV is added, it can compare external leaderboards directly by player name.
